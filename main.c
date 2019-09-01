@@ -56,12 +56,6 @@ bool isEmptyString(String *str) {
   return *str->length == 0 ? TRUE : FALSE;
 }
 
-String *roolBack(String *str) {
-  String *ret;
-  for (ret = str; ret->before != NULL; ret = ret->before);
-  return ret;
-}
-
 char *toCharArr(String *str) {
   char *ret = malloc(sizeof(char) * (*str->length));
 
@@ -71,6 +65,12 @@ char *toCharArr(String *str) {
     ret[count] = str->this;
     count += 1;
   }
+  return ret;
+}
+
+String *roolBack(String *str) {
+  String *ret;
+  for (ret = str; ret->before != NULL; ret = ret->before);
   return ret;
 }
 
@@ -101,14 +101,19 @@ String *newString(char *str) {
   }
 }
 
+String *stringCopy(String *str) {
+  char *arr = toCharArr(str);
+  return newString(arr);
+}
+
 ulli len(String *str) {
   return *str->length;
 }
 
 String *pushChar(String *str, char c) {
-  String *now;
+  String *now = stringCopy(str);
 
-  for (now = str; now->next != NULL; now = now->next);
+  for (now; now->next != NULL; now = now->next);
 
   String *new = newChar(c, now->pos + 1, *now->length, now, NULL);
   now->next = new;
@@ -131,38 +136,40 @@ int charCodeAt(String *str, ulli index) {
 }
 
 String *concat(String *str1, String *str2) {
+  String *ret = stringCopy(str1);
   for (str2; str2 != NULL; str2 = str2->next) {
-    str1 = pushChar(str1, str2->this);
+    ret = pushChar(ret, str2->this);
   }
 
-  return str1;
+  return ret;
 }
 
 String *toLowerCase(String *str) {
-  String *beg = str;
-  for (str; str != NULL; str = str->next) {
-    int ascii = (int)str->this;
+  String *ret = stringCopy(str);
+  String *beg = ret;
+  for (ret; ret != NULL; ret = ret->next) {
+    int ascii = (int)ret->this;
 
     if (ascii >= 65 && ascii <= 90) {
-      str->this = (char)(ascii + ASCIIFIX);
+      ret->this = (char)(ascii + ASCIIFIX);
     }
   }
-
   return beg;
 }
 
 String *toUpperCase(String *str) {
-  String *beg = str;
-  for (str; str != NULL; str = str->next) {
-    int ascii = (int)str->this;
+  String *ret = stringCopy(str);
+  String *beg = ret;
+  for (ret; ret != NULL; ret = ret->next) {
+    int ascii = (int)ret->this;
 
     if (ascii >= 97 && ascii <= 122) {
-      str->this = (char)(ascii - ASCIIFIX);
+      ret->this = (char)(ascii - ASCIIFIX);
     }
   }
-
   return beg;
 }
+
 
 int main(void) {
   String *str1 = newString("TESTE");
@@ -170,11 +177,7 @@ int main(void) {
   String *str3 = newString("teste3");
 
   printString(str1);
-  concat(str1, str2);
+  printf("%c\n", charAt(str1, 0));
   printString(str1);
-
-  printString(str2);
-  printString(toUpperCase(str2));
-  printString(str2);
 
 }
