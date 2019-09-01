@@ -106,7 +106,7 @@ ulli len(String *str) {
 
 String *pushChar(String *str, char c) {
   String *now;
-  printStringData(str);
+
   for (now = str; now->next != NULL; now = now->next);
 
   String *new = newChar(c, now->pos + 1, *now->length, now, NULL);
@@ -129,9 +129,18 @@ int charCodeAt(String *str, ulli index) {
   return (int) c;
 }
 
+String *concat(String *str1, String *str2) {
+  for (str2; str2 != NULL; str2 = str2->next) {
+    str1 = pushChar(str1, str2->this);
+  }
+
+  return str1;
+}
+
 int main(void) {
-  String *str = newString("teste");
-  printString(str);
-  str = pushChar(str, '!');
-  printString(str);
+  String *str1 = newString("teste ");
+  String *str2 = newString("teste2 ");
+  String *str3 = newString("teste3");
+
+  printString(concat(str1, concat(str2, str3)));
 }
