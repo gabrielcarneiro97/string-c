@@ -12,7 +12,7 @@ struct String {
   ulli *length;
   struct String *next;
   struct String *before;
-
+  ulli pos;
   char this;
 };
 
@@ -23,7 +23,7 @@ void debug(int num) {
 }
 
 void printStringData(String *str) {
-  printf("this: %c, length: %ld, next: %p, before: %p, now: %p\n", str->this, *str->length, str->next, str->before, str);
+  printf("this: %c, pos: %ld, length: %ld, now: %p, next: %p, before: %p\n", str->this, str->pos, *str->length, str, str->next, str->before);
 }
 
 void printData(String *str) {
@@ -33,7 +33,7 @@ void printData(String *str) {
   }
 }
 
-String *newChar(char this, String *before, String *next, ulli length) {
+String *newChar(char this, ulli pos, ulli length, String *before, String *next) {
   String *ret = malloc(sizeof(String));
   
   ret->this = this;
@@ -41,12 +41,13 @@ String *newChar(char this, String *before, String *next, ulli length) {
   ret->next = next;
   ret->length = malloc(sizeof(ulli));
   *ret->length = length;
+  ret->pos = pos;
 
   return ret;
 }
 
 String *emptyString() {
-  return newChar('\0', NULL, NULL, 0);
+  return newChar('\0', 0, 0, NULL, NULL);
 }
 
 bool isEmptyString(String *str) {
@@ -82,11 +83,11 @@ String *newString(char *str) {
 
     for(ulli i = 0; i < len; i += 1) {
       if (isEmptyString(now)) {
-        now = newChar(str[i], NULL, NULL, len);
+        now = newChar(str[i], i, len, NULL, NULL);
       } else {
         before = now;
 
-        now = newChar(str[i], NULL, NULL, len);
+        now = newChar(str[i], i, len, NULL, NULL);
 
         now->before = before;
 
