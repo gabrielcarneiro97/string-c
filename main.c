@@ -144,7 +144,20 @@ String *toLowerCase(String *str) {
     int ascii = (int)str->this;
 
     if (ascii >= 65 && ascii <= 90) {
-      str->this = (char)(ASCIIFIX + ascii);
+      str->this = (char)(ascii + ASCIIFIX);
+    }
+  }
+
+  return beg;
+}
+
+String *toUpperCase(String *str) {
+  String *beg = str;
+  for (str; str != NULL; str = str->next) {
+    int ascii = (int)str->this;
+
+    if (ascii >= 97 && ascii <= 122) {
+      str->this = (char)(ascii - ASCIIFIX);
     }
   }
 
@@ -153,8 +166,15 @@ String *toLowerCase(String *str) {
 
 int main(void) {
   String *str1 = newString("TESTE");
-  String *str2 = newString("teste2 ");
+  String *str2 = newString("teste2 !!");
   String *str3 = newString("teste3");
 
-  printString(toLowerCase(str1));
+  printString(str1);
+  concat(str1, str2);
+  printString(str1);
+
+  printString(str2);
+  printString(toUpperCase(str2));
+  printString(str2);
+
 }
