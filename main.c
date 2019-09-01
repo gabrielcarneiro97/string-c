@@ -4,6 +4,7 @@
 
 #define TRUE 1
 #define FALSE 0
+#define ASCIIFIX 32
 
 typedef unsigned long int ulli;
 typedef short int bool;
@@ -137,10 +138,23 @@ String *concat(String *str1, String *str2) {
   return str1;
 }
 
+String *toLowerCase(String *str) {
+  String *beg = str;
+  for (str; str != NULL; str = str->next) {
+    int ascii = (int)str->this;
+
+    if (ascii >= 65 && ascii <= 90) {
+      str->this = (char)(ASCIIFIX + ascii);
+    }
+  }
+
+  return beg;
+}
+
 int main(void) {
-  String *str1 = newString("teste ");
+  String *str1 = newString("TESTE");
   String *str2 = newString("teste2 ");
   String *str3 = newString("teste3");
 
-  printString(concat(str1, concat(str2, str3)));
+  printString(toLowerCase(str1));
 }
