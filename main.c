@@ -6,15 +6,15 @@
 #define FALSE 0
 #define ASCIIFIX 32
 
-typedef unsigned long int ulli;
+typedef long long int lli;
 typedef short int bool;
 
 struct String {
-  ulli *length;
+  lli *length;
   struct String *next;
   struct String *before;
 
-  ulli pos;
+  lli pos;
   char this;
 };
 
@@ -35,13 +35,13 @@ void printData(String *str) {
   }
 }
 
-String *newChar(char this, ulli pos, ulli length, String *before, String *next) {
+String *newChar(char this, lli pos, lli length, String *before, String *next) {
   String *ret = malloc(sizeof(String));
   
   ret->this = this;
   ret->before = before;
   ret->next = next;
-  ret->length = malloc(sizeof(ulli));
+  ret->length = malloc(sizeof(lli));
   *ret->length = length;
   ret->pos = pos;
 
@@ -59,7 +59,7 @@ bool isEmptyString(String *str) {
 char *toCharArr(String *str) {
   char *ret = malloc(sizeof(char) * (*str->length));
 
-  ulli count = 0;
+  lli count = 0;
 
   for(str; str != NULL; str = str->next) {
     ret[count] = str->this;
@@ -78,12 +78,12 @@ String *newString(char *str) {
   if (str == NULL) {
     return emptyString();
   } else {
-    ulli len = (ulli)(strlen(str));
+    lli len = (lli)(strlen(str));
 
     String *now = emptyString();
     String *before = emptyString();
 
-    for(ulli i = 0; i < len; i += 1) {
+    for(lli i = 0; i < len; i += 1) {
       if (isEmptyString(now)) {
         now = newChar(str[i], i, len, NULL, NULL);
       } else {
@@ -106,7 +106,7 @@ String *stringCopy(String *str) {
   return newString(arr);
 }
 
-ulli len(String *str) {
+lli len(String *str) {
   return *str->length;
 }
 
@@ -125,12 +125,12 @@ void printString(String *str) {
   printf("%s\n", toCharArr(str));
 }
 
-char charAt(String *str, ulli index) {
+char charAt(String *str, lli index) {
   for (str; str->pos != index; str = str->next);
   return str->this;
 }
 
-int charCodeAt(String *str, ulli index) {
+int charCodeAt(String *str, lli index) {
   char c = charAt(str, index);
   return (int) c;
 }
