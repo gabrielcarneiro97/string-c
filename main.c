@@ -12,6 +12,7 @@ struct String {
   ulli *length;
   struct String *next;
   struct String *before;
+
   ulli pos;
   char this;
 };
@@ -103,7 +104,12 @@ ulli len(String *str) {
   return *str->length;
 }
 
+char charAt(String *str, ulli index) {
+  for (str; str-> pos != index; str = str->next);
+  return str->this;
+}
+
 int main(void) {
   String *str = newString("teste");
-  printf("%s\n", toCharArr(str));
+  printf("%c\n", charAt(str, 0));
 }
