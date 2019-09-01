@@ -25,7 +25,7 @@ void debug(int num) {
 }
 
 void printStringData(String *str) {
-  printf("this: %c, pos: %ld, length: %ld, now: %p, next: %p, before: %p\n", str->this, str->pos, *str->length, str, str->next, str->before);
+  printf("this: %c, pos: %lld, length: %lld, now: %p, next: %p, before: %p\n", str->this, str->pos, *str->length, str, str->next, str->before);
 }
 
 void printData(String *str) {
