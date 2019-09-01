@@ -55,7 +55,7 @@ bool isEmptyString(String *str) {
   return *str->length == 0 ? TRUE : FALSE;
 }
 
-String *runBack(String *str) {
+String *roolBack(String *str) {
   String *ret;
   for (ret = str; ret->before != NULL; ret = ret->before);
   return ret;
@@ -96,7 +96,7 @@ String *newString(char *str) {
       }
 
     }
-    return runBack(now);
+    return roolBack(now);
   }
 }
 
@@ -104,12 +104,34 @@ ulli len(String *str) {
   return *str->length;
 }
 
+String *pushChar(String *str, char c) {
+  String *now;
+  printStringData(str);
+  for (now = str; now->next != NULL; now = now->next);
+
+  String *new = newChar(c, now->pos + 1, *now->length, now, NULL);
+  now->next = new;
+
+  return roolBack(new);
+}
+
+void printString(String *str) {
+  printf("%s\n", toCharArr(str));
+}
+
 char charAt(String *str, ulli index) {
-  for (str; str-> pos != index; str = str->next);
+  for (str; str->pos != index; str = str->next);
   return str->this;
+}
+
+int charCodeAt(String *str, ulli index) {
+  char c = charAt(str, index);
+  return (int) c;
 }
 
 int main(void) {
   String *str = newString("teste");
-  printf("%c\n", charAt(str, 0));
+  printString(str);
+  str = pushChar(str, '!');
+  printString(str);
 }
