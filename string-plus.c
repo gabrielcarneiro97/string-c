@@ -124,6 +124,19 @@ String *pushChar(String *str, char c) {
   return roolBack(new);
 }
 
+String *popChar(String *str, char *poped) {
+  String *now = copyString(str);
+
+  for (now; now->next->next != NULL; now = now->next);
+
+  if (poped != NULL) *poped = now->next->this;
+
+  free(now->next);
+  now->next = NULL;
+
+  return roolBack(now);
+}
+
 void printString(String *str) {
   printf("%s\n", toCharArr(str));
 }
@@ -179,10 +192,7 @@ int main(void) {
   String *str2 = newString("teste2 !!");
   String *str3 = newString("teste3");
 
-  printString(str1);
-  printf("%lld\n", len(str1));
-  str1 = pushChar(str1, 'a');
-  printString(str1);
-  printf("%lld\n", len(str1));
+  char a;
+  printString(concat(str1, str2));
 
 }
