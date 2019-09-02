@@ -115,12 +115,16 @@ lli len(String *str) {
 
 String *pushChar(String *str, char c) {
   String *now = copyString(str);
+  String *new;
 
-  for (now; now->next != NULL; now = now->next);
+  if (len(now) == 0) {
+    new = newChar(c, 0, 1, NULL, NULL, NULL);
+  } else {
+    for (now; now->next != NULL; now = now->next);
 
-  String *new = newChar(c, now->pos + 1, (*now->length) + 1, now->length, now, NULL);
-  now->next = new;
-
+    new = newChar(c, now->pos + 1, (*now->length) + 1, now->length, now, NULL);
+    now->next = new;
+  }
   return roolBack(new);
 }
 
@@ -186,13 +190,30 @@ String *toUpperCase(String *str) {
   return beg;
 }
 
+String *slice(String *str, lli start, lli end) {
+  if (end == 0 || end > *(str->length)) end = *(str->length);
+
+  char *arr = toCharArr(str);
+
+  String *ret = emptyString();
+
+  if (start < 0 || end < 0) return ret;
+
+  for (lli i = start; i < end; i += 1) {
+    ret = pushChar(ret, arr[i]);
+  }
+
+  return ret;
+}
+
 
 int main(void) {
-  String *str1 = newString("TESTE");
+  String *str1 = newString("Apple, Banana, Kiwi");
   String *str2 = newString("teste2 !!");
   String *str3 = newString("teste3");
 
-  char a;
-  printString(concat(str1, str2));
+  String *banana = slice(str1, 7, 0);
+
+  printString(banana);
 
 }
