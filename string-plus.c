@@ -146,9 +146,14 @@ void freeString(String *str) {
   String *temp;
   for(str; str != NULL; str = temp) {
     temp = str->next;
+
+    if (temp == NULL) {
+      str->length = NULL;
+      free(str->length);
+    }
+
     free(str);
   }
-
   free(temp);
 }
 
