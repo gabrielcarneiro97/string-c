@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+
 
 #define TRUE 1
 #define FALSE 0
@@ -138,6 +140,8 @@ String *popChar(String *str, char *poped) {
 
   free(now->next);
   now->next = NULL;
+
+  *now->length -= 1;
 
   return roolBack(now);
 }
@@ -279,16 +283,76 @@ lli indexOf(String *str, String *search) {
   return pos;
 }
 
+String *fixPos(String *str) {
+  String *in = copyString(str);
+  String *beg = in;
+
+  for (in; in->before != NULL; in = in->before);
+
+  lli count = 0;
+  for(in; in != NULL; in = in->next) {
+    in->pos = count;
+    count += 1;
+  }
+
+  return beg;
+}
+
+String *removeChar(String *str, lli index) {
+  if (index >= len(str)) return str;
+
+  String *in = copyString(str);
+  String *beg = in;
+
+  for (in; pos(in) != index; in = in->next);
+
+  if (in->before == NULL) {
+    beg = in->next;
+    beg->before = NULL;
+
+    free(in);
+
+    *beg->length -= 1;
+
+    return fixPos(beg);
+  } else if (in->next == NULL) {
+    return popChar(beg, NULL);
+  } else {
+    in->before->next = in->next;
+
+    free(in);
+
+    *beg->length -= 1;
+
+    return fixPos(beg);
+  }
+}
+
+String *trim(String *str) {
+  String *in = copyString(str);
+  String *beg = in;
+
+  int nsBeg = 0, nsEnd = 0;
+
+}
+
 char *_(String *str) {
   return toCharArr(str);
 }
 
 int main(void) {
-  String *str1 = newString("Apple, Banana, Kiwi");
+  String *str1 = newString("12345");
   String *str2 = newString("teste2 !!");
   String *str3 = newString("teste3");
 
-  printf("%s\n", _(str1));
+  printString(str1);
+  printData(str1);
+
+  str1 = removeChar(str1, 0);
+
+  printString(str1);
+  printData(str1);
+
 
   freeString(str1);
   freeString(str2);
