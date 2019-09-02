@@ -150,6 +150,14 @@ char charAt(String *str, lli index) {
   return str->this;
 }
 
+char this(String *str) {
+  return str->this;
+}
+
+lli pos(String *str) {
+  return str->pos;
+}
+
 int charCodeAt(String *str, lli index) {
   char c = charAt(str, index);
   return (int) c;
@@ -225,13 +233,36 @@ String *substr(String *str, lli start, lli size) {
   return ret;
 }
 
+lli indexOf(String *str, String *search) {
+  String *s = copyString(str);
+  String *searchBeg = search;
+
+  lli counter = 0;
+  lli pos = -1;
+  for (s; s != NULL; s = s->next) {
+    if (this(s) == this(search)) {
+      if (search->pos == 0) {
+        pos = s->pos;
+      }
+      search = search->next;
+      counter += 1;
+
+      if (search == NULL) return pos;
+    } else {
+      search = searchBeg;
+      counter = 0;
+      pos = -1;
+    }
+  }
+
+  return pos;
+}
+
 int main(void) {
   String *str1 = newString("Apple, Banana, Kiwi");
   String *str2 = newString("teste2 !!");
   String *str3 = newString("teste3");
 
-  String *banana = substr(str1, 7, 0);
-
-  printString(banana);
+  printf("%lld\n", indexOf(str1, newString("Banana")));
 
 }
