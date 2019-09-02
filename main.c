@@ -35,21 +35,24 @@ void printData(String *str) {
   }
 }
 
-String *newChar(char this, lli pos, lli length, String *before, String *next) {
+String *newChar(char this, lli pos, lli length, lli *lengthPointer, String *before, String *next) {
   String *ret = malloc(sizeof(String));
-  
+
   ret->this = this;
   ret->before = before;
   ret->next = next;
-  ret->length = malloc(sizeof(lli));
-  *ret->length = length;
   ret->pos = pos;
+
+  if (lengthPointer != NULL) ret->length = lengthPointer;
+  else ret->length = malloc(sizeof(lli));
+
+  *ret->length = length;
 
   return ret;
 }
 
 String *emptyString() {
-  return newChar('\0', 0, 0, NULL, NULL);
+  return newChar('\0', 0, 0, NULL, NULL, NULL);
 }
 
 bool isEmptyString(String *str) {
@@ -85,15 +88,15 @@ String *newString(char *str) {
 
     for(lli i = 0; i < len; i += 1) {
       if (isEmptyString(now)) {
-        now = newChar(str[i], i, len, NULL, NULL);
+        now = newChar(str[i], i, len, NULL, NULL, NULL);
       } else {
         before = now;
 
-        now = newChar(str[i], i, len, NULL, NULL);
+        now = newChar(str[i], i, len, before->length, NULL, NULL);
 
         now->before = before;
 
-        before->next = now;        
+        before->next = now;
       }
 
     }
@@ -115,7 +118,7 @@ String *pushChar(String *str, char c) {
 
   for (now; now->next != NULL; now = now->next);
 
-  String *new = newChar(c, now->pos + 1, (*now->length) + 1, now, NULL); // arrumar o tamanho q n tá atualizando
+  String *new = newChar(c, now->pos + 1, (*now->length) + 1, now->length, now, NULL);
   now->next = new;
 
   return roolBack(new);
@@ -179,7 +182,7 @@ int main(void) {
   printString(str1);
   printf("%lld\n", len(str1));
   str1 = pushChar(str1, 'a');
-  printf("%lld\n", len(str1));
   printString(str1);
+  printf("%lld\n", len(str1));
 
 }
