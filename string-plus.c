@@ -274,12 +274,16 @@ lli indexOf(String *str, String *search) {
   return pos;
 }
 
+char *_(String *str) {
+  return toCharArr(str);
+}
+
 int main(void) {
   String *str1 = newString("Apple, Banana, Kiwi");
   String *str2 = newString("teste2 !!");
   String *str3 = newString("teste3");
 
-  printf("%lld\n", indexOf(str1, newString("Banana")));
+  printf("%s\n", _(str1));
 
   freeString(str1);
   freeString(str2);
