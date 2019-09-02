@@ -125,6 +125,7 @@ String *pushChar(String *str, char c) {
     new = newChar(c, now->pos + 1, (*now->length) + 1, now->length, now, NULL);
     now->next = new;
   }
+
   return roolBack(new);
 }
 
@@ -139,6 +140,16 @@ String *popChar(String *str, char *poped) {
   now->next = NULL;
 
   return roolBack(now);
+}
+
+void freeString(String *str) {
+  String *temp;
+  for(str; str != NULL; str = temp) {
+    temp = str->next;
+    free(str);
+  }
+
+  free(temp);
 }
 
 void printString(String *str) {
@@ -182,6 +193,7 @@ String *toLowerCase(String *str) {
       ret->this = (char)(ascii + ASCIIFIX);
     }
   }
+
   return beg;
 }
 
@@ -195,6 +207,7 @@ String *toUpperCase(String *str) {
       ret->this = (char)(ascii - ASCIIFIX);
     }
   }
+
   return beg;
 }
 
@@ -211,6 +224,7 @@ String *slice(String *str, lli start, lli end) {
     ret = pushChar(ret, arr[i]);
   }
 
+  free(arr);
   return ret;
 }
 
@@ -230,6 +244,7 @@ String *substr(String *str, lli start, lli size) {
     ret = pushChar(ret, arr[i]);
   }
 
+  free(arr);
   return ret;
 }
 
@@ -255,6 +270,7 @@ lli indexOf(String *str, String *search) {
     }
   }
 
+  freeString(s);
   return pos;
 }
 
@@ -264,5 +280,9 @@ int main(void) {
   String *str3 = newString("teste3");
 
   printf("%lld\n", indexOf(str1, newString("Banana")));
+
+  freeString(str1);
+  freeString(str2);
+  freeString(str3);
 
 }
