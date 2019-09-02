@@ -101,7 +101,7 @@ String *newString(char *str) {
   }
 }
 
-String *stringCopy(String *str) {
+String *copyString(String *str) {
   char *arr = toCharArr(str);
   return newString(arr);
 }
@@ -111,11 +111,11 @@ lli len(String *str) {
 }
 
 String *pushChar(String *str, char c) {
-  String *now = stringCopy(str);
+  String *now = copyString(str);
 
   for (now; now->next != NULL; now = now->next);
 
-  String *new = newChar(c, now->pos + 1, *now->length, now, NULL);
+  String *new = newChar(c, now->pos + 1, (*now->length) + 1, now, NULL); // arrumar o tamanho q n tá atualizando
   now->next = new;
 
   return roolBack(new);
@@ -136,7 +136,7 @@ int charCodeAt(String *str, lli index) {
 }
 
 String *concat(String *str1, String *str2) {
-  String *ret = stringCopy(str1);
+  String *ret = copyString(str1);
   for (str2; str2 != NULL; str2 = str2->next) {
     ret = pushChar(ret, str2->this);
   }
@@ -145,7 +145,7 @@ String *concat(String *str1, String *str2) {
 }
 
 String *toLowerCase(String *str) {
-  String *ret = stringCopy(str);
+  String *ret = copyString(str);
   String *beg = ret;
   for (ret; ret != NULL; ret = ret->next) {
     int ascii = (int)ret->this;
@@ -158,7 +158,7 @@ String *toLowerCase(String *str) {
 }
 
 String *toUpperCase(String *str) {
-  String *ret = stringCopy(str);
+  String *ret = copyString(str);
   String *beg = ret;
   for (ret; ret != NULL; ret = ret->next) {
     int ascii = (int)ret->this;
@@ -177,7 +177,9 @@ int main(void) {
   String *str3 = newString("teste3");
 
   printString(str1);
-  printf("%c\n", charAt(str1, 0));
+  printf("%lld\n", len(str1));
+  str1 = pushChar(str1, 'a');
+  printf("%lld\n", len(str1));
   printString(str1);
 
 }
