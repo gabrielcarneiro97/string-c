@@ -191,7 +191,7 @@ String *toUpperCase(String *str) {
 }
 
 String *slice(String *str, lli start, lli end) {
-  if (end == 0 || end > *(str->length)) end = *(str->length);
+  if (end == 0 || end > len(str)) end = len(str);
 
   char *arr = toCharArr(str);
 
@@ -206,13 +206,31 @@ String *slice(String *str, lli start, lli end) {
   return ret;
 }
 
+String *substr(String *str, lli start, lli size) {
+  lli end;
+
+  if (size == 0 || start + size > len(str)) end = len(str);
+  else end = start + size;
+
+  char *arr = toCharArr(str);
+
+  String *ret = emptyString();
+
+  if (start < 0 || size < 0) return ret;
+
+  for (lli i = start; i < end; i += 1) {
+    ret = pushChar(ret, arr[i]);
+  }
+
+  return ret;
+}
 
 int main(void) {
   String *str1 = newString("Apple, Banana, Kiwi");
   String *str2 = newString("teste2 !!");
   String *str3 = newString("teste3");
 
-  String *banana = slice(str1, 7, 0);
+  String *banana = substr(str1, 7, 0);
 
   printString(banana);
 
