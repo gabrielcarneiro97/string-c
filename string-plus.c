@@ -334,6 +334,32 @@ String *trim(String *str) {
 
   int nsBeg = 0, nsEnd = 0;
 
+  for (in; in->before != NULL; in = in->before);
+
+  while(nsBeg == 0) {
+    if (isspace(this(in))) {
+      in = removeChar(in, in->pos);
+      beg = in;
+    } else {
+      nsBeg = 1;
+    }
+  }
+
+  for (in; in->next != NULL; in = in->next);
+
+  while(nsEnd == 0) {
+    if (isspace(this(in))) {
+      in = in->before;
+      *in->length -= 1;
+
+      in->next = NULL;
+      free(in->next);
+    } else {
+      nsEnd = 1;
+    }
+  }
+
+  return beg;
 }
 
 char *_(String *str) {
@@ -341,18 +367,11 @@ char *_(String *str) {
 }
 
 int main(void) {
-  String *str1 = newString("12345");
+  String *str1 = newString("      12345         ");
   String *str2 = newString("teste2 !!");
   String *str3 = newString("teste3");
 
-  printString(str1);
-  printData(str1);
-
-  str1 = removeChar(str1, 0);
-
-  printString(str1);
-  printData(str1);
-
+  printData(trim(str1));
 
   freeString(str1);
   freeString(str2);
