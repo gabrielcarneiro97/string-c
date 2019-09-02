@@ -3,7 +3,6 @@
 #include <string.h>
 #include <ctype.h>
 
-
 #define TRUE 1
 #define FALSE 0
 #define ASCIIFIX 32
@@ -362,16 +361,29 @@ String *trim(String *str) {
   return beg;
 }
 
+String *repeat(String *str, lli count) {
+  if (count <= 0) return emptyString();
+  else if (count == 1) return str;
+
+  String *ret = emptyString();
+
+  for (lli i = 0; i < count; i += 1) {
+    ret = concat(ret, str);
+  }
+
+  return ret;
+}
+
 char *_(String *str) {
   return toCharArr(str);
 }
 
 int main(void) {
-  String *str1 = newString("      12345         ");
+  String *str1 = newString("!");
   String *str2 = newString("teste2 !!");
   String *str3 = newString("teste3");
 
-  printData(trim(str1));
+  printStringData(repeat(str1, 0));
 
   freeString(str1);
   freeString(str2);
