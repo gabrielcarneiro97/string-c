@@ -21,6 +21,13 @@ struct String {
 
 typedef struct String String;
 
+struct StringArr {
+  String **arr;
+  lli length;
+};
+
+typedef struct StringArr StringArr;
+
 void debug(int num) {
   printf("debug -> %d\n", num);
 }
@@ -455,19 +462,78 @@ char *_(String *str) {
   return toCharArr(str);
 }
 
+StringArr *newStringArr() {
+  StringArr *strArr = malloc(sizeof(StringArr));
+  strArr->length = 0;
+  strArr->arr = NULL;
+  return strArr;
+}
+
+void freeStringArr(StringArr *strArr) {
+  for(lli i = 0; i < strArr->length; i += 1) {
+    freeString(strArr->arr[i]);
+  }
+  free(strArr);
+}
+
+bool isEmptyStringArr(StringArr *strArr) {
+  return strArr->length == 0 ? TRUE : FALSE;
+}
+
+StringArr *copyStringArr(StringArr *strArr) {
+  if (isEmptyStringArr(strArr)) return newStringArr();
+
+  lli length = strArr->length;
+
+  StringArr *new = malloc(sizeof(StringArr));
+  new->length = length;
+
+  new->arr = malloc(sizeof(String *) * length);
+
+  for(lli i = 0; i < length;i += 1) new->arr[i] = strArr->arr[i];
+
+  return new;
+}
+
+StringArr *pushStringArr(StringArr *strArr, String *str) {
+  StringArr *new = copyStringArr(strArr);
+  String *toPush = copyString(str);
+
+  if (isEmptyStringArr(new)) {
+    new->arr = malloc(sizeof(String *) * 1);
+    new->arr[0] = toPush;
+    new->length += 1;
+  } else {
+    new->length += 1;
+    new->arr = realloc(new->arr, sizeof(String *) * new->length);
+
+    lli counter = 0;
+    for (counter = 0; new->arr[counter] != NULL; counter += 1);
+
+    new->arr[counter] = toPush;
+  }
+
+  return new;
+}
+
+String *getStringFromArr(StringArr *strArr, lli index) {
+  if(strArr->arr[index] == NULL) return emptyString();
+  return copyString(strArr->arr[index]);
+}
+
 int main(void) {
   String *str1 = newString("Apple, Banana, Kiwi");
   String *str2 = newString("Banana");
-  String *str3 = slice(str1, indexOf(str1, str2), 0);
 
-  // printData(str3);
-  // printString(str3);
+  StringArr *arr = newStringArr();
 
-  printString(str1);
-  printString(str3);
+  arr = pushStringArr(arr, str1);
+  arr = pushStringArr(arr, str2);
+
+  for(int i = 0; i < 3; i++) printString(getStringFromArr(arr, i));
 
   freeString(str1);
   freeString(str2);
-  freeString(str3);
+  freeStringArr(arr);
 
 }
