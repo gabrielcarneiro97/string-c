@@ -8,7 +8,7 @@
 #define ASCIIFIX 32
 
 typedef long long int lli;
-typedef short int bool;
+typedef unsigned short int bool;
 
 struct String {
   lli *length;
@@ -310,6 +310,18 @@ lli lastIndexOf(String *str, String *search) {
   return pos;
 }
 
+bool endsWith(String *str, String *search) {
+  String *s = copyString(str);
+  String *src = copyString(search);
+
+  lli lastId = lastIndexOf(s, src);
+
+  if (lastId == -1) return FALSE;
+  if (lastId != len(s) - len(search)) return FALSE;
+
+  return TRUE;
+}
+
 String *fixPos(String *str) {
   String *in = copyString(str);
   String *beg = in;
@@ -402,20 +414,37 @@ String *repeat(String *str, lli count) {
   return ret;
 }
 
+bool isEquals(String *str1, String *str2) {
+  bool s1E = isEmptyString(str1);
+  bool s2E = isEmptyString(str2);
+
+  if (s1E != s2E) return FALSE;
+  if (s1E == TRUE && s2E == TRUE) return TRUE;
+
+  String *s1 = copyString(str1);
+  String *s2 = copyString(str2);
+
+  for (s1; s1 != NULL; s1 = s1->next) {
+    if (this(s1) != this(s2)) return FALSE;
+    s2 = s2->next;
+  }
+
+  freeString(s1);
+  freeString(s2);
+
+  return TRUE;
+}
+
 char *_(String *str) {
   return toCharArr(str);
 }
 
 int main(void) {
-  String *str1 = newString("1");
-  String *str2 = newString("teste2 !!");
+  String *str1 = newString("10");
+  String *str2 = newString("10");
   String *str3 = newString("teste3");
 
-  lli first = indexOf(str1, newString("e"));
-  debug(2);
-  lli last = lastIndexOf(str1, newString("e"));
-
-  printf("%lld, %lld\n", first, last);
+  printf("%usd\n", isEquals(str1, str3));
 
   freeString(str1);
   freeString(str2);
