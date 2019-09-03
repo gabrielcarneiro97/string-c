@@ -36,6 +36,14 @@ void printData(String *str) {
   }
 }
 
+char this(String *str) {
+  return str->this;
+}
+
+lli len(String *str) {
+  return *str->length;
+}
+
 String *newChar(char this, lli pos, lli length, lli *lengthPointer, String *before, String *next) {
   String *ret = malloc(sizeof(String));
 
@@ -58,18 +66,6 @@ String *emptyString() {
 
 bool isEmptyString(String *str) {
   return *str->length == 0 ? TRUE : FALSE;
-}
-
-char *toCharArr(String *str) {
-  char *ret = malloc(sizeof(char) * (*str->length));
-
-  lli count = 0;
-
-  for(str; str != NULL; str = str->next) {
-    ret[count] = str->this;
-    count += 1;
-  }
-  return ret;
 }
 
 String *roolBack(String *str) {
@@ -106,19 +102,44 @@ String *newString(char *str) {
 }
 
 String *copyString(String *str) {
-  char *arr = toCharArr(str);
-  return newString(arr);
+  if (isEmptyString(str)) return emptyString();
+
+  String *new = emptyString();
+
+  for(str; str != NULL; str = str->next) {
+    char c = this(str);
+    if (len(new) == 0) new = newChar(c, 0, 1, NULL, NULL, NULL);
+    else {
+      String *newC = newChar(c, new->pos + 1, (*new->length) + 1, new->length, new, NULL);
+      new->next = newC;
+      new = newC;
+    }
+  }
+
+  return roolBack(new);
 }
 
-lli len(String *str) {
-  return *str->length;
+char *toCharArr(String *str) {
+  String *s = copyString(str);
+  char *ret = malloc(sizeof(char) * len(s));
+
+  lli l = len(str);
+
+  lli count = 0;
+
+  for(str; str != NULL; str = str->next) {
+    ret[count] = this(str);
+    count += 1;
+  }
+  return ret;
 }
 
 String *pushChar(String *str, char c) {
   String *now = copyString(str);
   String *new;
 
-  if (len(now) == 0) {
+  printf("%lld\n", len(now));
+  if (isEmptyString(now)) {
     new = newChar(c, 0, 1, NULL, NULL, NULL);
   } else {
     for (now; now->next != NULL; now = now->next);
@@ -126,7 +147,6 @@ String *pushChar(String *str, char c) {
     new = newChar(c, now->pos + 1, (*now->length) + 1, now->length, now, NULL);
     now->next = new;
   }
-
   return roolBack(new);
 }
 
@@ -165,10 +185,6 @@ void printString(String *str) {
 
 char charAt(String *str, lli index) {
   for (str; str->pos != index; str = str->next);
-  return str->this;
-}
-
-char this(String *str) {
   return str->this;
 }
 
@@ -232,7 +248,7 @@ String *slice(String *str, lli start, lli end) {
   }
 
   free(arr);
-  return ret;
+  return roolBack(ret);
 }
 
 String *substr(String *str, lli start, lli size) {
@@ -245,14 +261,14 @@ String *substr(String *str, lli start, lli size) {
 
   String *ret = emptyString();
 
-  if (start < 0 || size < 0) return ret;
+  if (start < 0 || end < 0) return ret;
 
   for (lli i = start; i < end; i += 1) {
     ret = pushChar(ret, arr[i]);
   }
 
   free(arr);
-  return ret;
+  return roolBack(ret);
 }
 
 lli indexOf(String *str, String *search) {
@@ -440,11 +456,15 @@ char *_(String *str) {
 }
 
 int main(void) {
-  String *str1 = newString("10");
-  String *str2 = newString("10");
-  String *str3 = newString("teste3");
+  String *str1 = newString("Apple, Banana, Kiwi");
+  String *str2 = newString("Banana");
+  String *str3 = slice(str1, indexOf(str1, str2), 0);
 
-  printf("%usd\n", isEquals(str1, str3));
+  // printData(str3);
+  // printString(str3);
+
+  printString(str1);
+  printString(str3);
 
   freeString(str1);
   freeString(str2);
