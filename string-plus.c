@@ -157,7 +157,6 @@ void freeString(String *str) {
 
     free(str);
   }
-  free(temp);
 }
 
 void printString(String *str) {
@@ -258,27 +257,56 @@ String *substr(String *str, lli start, lli size) {
 
 lli indexOf(String *str, String *search) {
   String *s = copyString(str);
-  String *searchBeg = search;
+  String *src = copyString(search);
+  String *srcBeg = src;
 
-  lli counter = 0;
   lli pos = -1;
   for (s; s != NULL; s = s->next) {
-    if (this(s) == this(search)) {
-      if (search->pos == 0) {
+    if (this(s) == this(src)) {
+      if (src->pos == 0) {
         pos = s->pos;
       }
-      search = search->next;
-      counter += 1;
+      src = src->next;
 
-      if (search == NULL) return pos;
+      if (src == NULL) return pos;
     } else {
-      search = searchBeg;
-      counter = 0;
+      src = srcBeg;
       pos = -1;
     }
   }
 
   freeString(s);
+  freeString(src);
+  return pos;
+}
+
+lli lastIndexOf(String *str, String *search) {
+  String *s = copyString(str);
+  String *src = copyString(search);
+
+  for (src; src->next != NULL; src = src->next);
+
+  String *srcEnd = src;
+
+  lli pos = -1;
+  for(s; s->next != NULL; s = s->next);
+
+  for (s; s != NULL; s = s->before) {
+    if (this(s) == this(src)) {
+      if (src->pos == 0) {
+        pos = s->pos;
+      }
+      src = src->before;
+
+      if (src == NULL) return pos;
+    } else {
+      src = srcEnd;
+      pos = -1;
+    }
+  }
+
+  freeString(s);
+  freeString(src);
   return pos;
 }
 
@@ -379,11 +407,15 @@ char *_(String *str) {
 }
 
 int main(void) {
-  String *str1 = newString("!");
+  String *str1 = newString("1");
   String *str2 = newString("teste2 !!");
   String *str3 = newString("teste3");
 
-  printStringData(repeat(str1, 0));
+  lli first = indexOf(str1, newString("e"));
+  debug(2);
+  lli last = lastIndexOf(str1, newString("e"));
+
+  printf("%lld, %lld\n", first, last);
 
   freeString(str1);
   freeString(str2);
